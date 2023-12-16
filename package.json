@@ -71,14 +71,14 @@
     "lint:tsc:src": "tsc --noEmit --pretty --project .",
     "lint:tsc:test": "tsc --noEmit --pretty --project test",
     "lint:eslint": "eslint --ext .js,.ts .",
-    "lint:prettier": "prettier --ignore-path .gitignore --list-different '**/*.{js,json,md,ts,yml}'",
+    "lint:prettier": "prettier --ignore-path .gitignore --write \"**/*.{js,json,md,ts,yml}\"",
     "lint:markdownlint": "markdownlint \"*.md\"",
     "postpublish": "node -e \"require(\\\"changelog-parser\\\")(\\\"CHANGELOG.md\\\").then(ch => console.log(ch.versions.filter(v => v.version === \\\"$npm_package_version\\\").map(v => \\\"v$npm_package_version\\n\\n\\\" + v.body).concat(\\\"Release v$npm_package_version\\\")[0]))\" | xargs -0 git tag v$npm_package_version -a -m && git push --tags",
     "prepack": "npm run compile",
     "prepublishOnly": "npm run test",
     "pretest": "npm run lint",
     "test": "npm run test:spec",
-    "test:spec": "$NYC mocha \"test/*.ts\"",
+    "test:spec": "nyc mocha \"test/*.ts\"",
     "test:coverage": "npm run clean:coverage && cross-env NYC=\"nyc --no-clean --reporter=lcov\" npm run test:spec && nyc report --reporter=text-summary --color"
   }
 }

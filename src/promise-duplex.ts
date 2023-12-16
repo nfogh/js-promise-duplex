@@ -8,7 +8,8 @@ import {PromiseWritable} from "promise-writable"
 
 export class PromiseDuplex<TDuplex extends Duplex>
   extends PromiseReadable<TDuplex>
-  implements AsyncIterable<Buffer | string> {
+  implements AsyncIterable<Buffer | string>
+{
   readonly readable: PromiseReadable<TDuplex>
   readonly writable: PromiseWritable<TDuplex>
 

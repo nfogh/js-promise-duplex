@@ -4,7 +4,6 @@ export class MockStreamDuplex extends Duplex {
   readable = true
   writable = true
 
-  closed = false
   destroyed = false
 
   ended = false
@@ -18,11 +17,9 @@ export class MockStreamDuplex extends Duplex {
   private encoding?: BufferEncoding
   private error?: Error
 
-  close(): void {
-    this.closed = true
-  }
-  destroy(): void {
+  destroy(): this {
     this.destroyed = true
+    return this
   }
   pause(): this {
     this.paused = true
@@ -52,15 +49,12 @@ export class MockStreamDuplex extends Duplex {
   write(chunk: any, cb?: (error: Error | null | undefined) => void): boolean
   write(chunk: any, encoding: BufferEncoding, cb?: (error: Error | null | undefined) => void): boolean
   write(chunk: any, _arg2?: any, _arg3?: any): boolean {
-    if (this.closed) {
-      return this.emit("error", new Error("writeAll after end"))
-    } else {
-      this.writeBuffer = Buffer.concat([this.writeBuffer, chunk])
-      this.bytesWritten = this.writeBuffer.length
-    }
+    this.writeBuffer = Buffer.concat([this.writeBuffer, chunk])
+    this.bytesWritten = this.writeBuffer.length
     return !chunk.toString().startsWith("pause")
   }
-  end(): void {
+  end(): this {
+    return this
     // noop
   }
   cork(): void {

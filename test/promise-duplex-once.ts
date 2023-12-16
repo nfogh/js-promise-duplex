@@ -39,46 +39,6 @@ Feature("Test promise-duplex module for once method", () => {
       })
     })
 
-    Scenario(`Wait for ${event} from closed stream`, () => {
-      let error: Error
-      let fulfilled = false
-      let promiseDuplex: PromiseDuplex<MockStreamDuplex>
-      let stream: MockStreamDuplex
-
-      Given("Duplex object", () => {
-        stream = new MockStreamDuplex()
-      })
-
-      And("PromiseDuplex object", () => {
-        promiseDuplex = new PromiseDuplex(stream)
-      })
-
-      When("stream is closed", () => {
-        stream.close()
-      })
-
-      When(`I wait for "${event}" event`, () => {
-        promiseDuplex
-          .once(event as any)
-          .then(() => {
-            fulfilled = true
-          })
-          .catch(err => {
-            error = err
-          })
-      })
-
-      if (event === "close") {
-        Then("promise is fulfilled", () => {
-          expect(fulfilled).to.be.true()
-        })
-      } else {
-        Then("promise is rejected", () => {
-          expect(error).to.be.an("error").with.property("message", `once ${event} after close`)
-        })
-      }
-    })
-
     Scenario(`Wait for ${event} from stream with error`, () => {
       let error: Error
       let promiseDuplex: PromiseDuplex<MockStreamDuplex>

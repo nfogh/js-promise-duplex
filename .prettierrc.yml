@@ -7,4 +7,4 @@ quoteProps: as-needed
 trailingComma: all
 bracketSpacing: false
 arrowParens: avoid
-endOfLine: lf
+endOfLine: auto
