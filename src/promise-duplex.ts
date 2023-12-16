@@ -6,11 +6,7 @@ import {Duplex} from "stream"
 import {PromiseReadable} from "promise-readable"
 import {PromiseWritable} from "promise-writable"
 
-interface DuplexStream extends Duplex {
-  closed?: boolean
-}
-
-export class PromiseDuplex<TDuplex extends DuplexStream>
+export class PromiseDuplex<TDuplex extends Duplex>
   extends PromiseReadable<TDuplex>
   implements AsyncIterable<Buffer | string> {
   readonly readable: PromiseReadable<TDuplex>
@@ -79,14 +75,6 @@ export class PromiseDuplex<TDuplex extends DuplexStream>
         const err = this.writable._errored
         this.writable._errored = undefined
         return reject(err)
-      }
-
-      if (stream.closed) {
-        if (event === "close") {
-          return resolve()
-        } else {
-          return reject(new Error(`once ${event} after close`))
-        }
       }
 
       if (stream.destroyed) {
